@@ -24,7 +24,7 @@ with file_path.open("rb") as file:
     hashed_passwords = pickle.load(file)
 
 authenticator = stauth.Authenticate(names, usernames, hashed_passwords,
-    "sales_dashboard", "abcdef", cookie_expiry_days=1)
+    "sales_dashboard", "abcdef", cookie_expiry_days=30)
 
 name, authentication_status, username = authenticator.login("Login", "main")
 
@@ -44,7 +44,7 @@ if authentication_status:
         st.sidebar.success("Select a page")
 
 
-        display = Image.open('logo41.jpg')
+        display = Image.open('emi_logo.jpg')
 
         authenticator.logout("Logout", "sidebar")
         st.sidebar.title(f"Welcome!, {name}")
@@ -78,15 +78,22 @@ if authentication_status:
                     - Generates maps required for monthly, seasonal (i.e., Bega, Belg, Kiremt), & annual climate bulletins.
                     """
                     )
+        
+        st.markdown(
+        """
+        ---
+        """
+        )
+                
         st.markdown('### Our Partners')
-        display1 = Image.open('AICCRA.png')
-        display2 = Image.open('CGIAT.png')
-        display3 = Image.open('CCAFS.png')
+        display1 = Image.open('aiccra.png')
+        #display2 = Image.open('CGIAT.png')
+        #display3 = Image.open('CCAFS.png')
         
         col1, col2, col3 = st.columns(3)
         
         col1, col2, col3 = st.columns(3)
-        col1.image(display1, width = 350)
+        col1.image(display1, width = 450)
         # col2.image(display2, width = 200)
         # col3.image(display3, width = 200)
         
@@ -122,7 +129,6 @@ if authentication_status:
         from bokeh.transform import factor_cmap
         from bokeh.tile_providers import get_provider, WIKIMEDIA, CARTODBPOSITRON, STAMEN_TERRAIN, STAMEN_TONER, ESRI_IMAGERY, OSM
         import holoviews as hv
-        import scipy
         import plotly.figure_factory as ff
         import plotly.express as px
 
@@ -932,7 +938,6 @@ if authentication_status:
         from bokeh.transform import factor_cmap
         from bokeh.tile_providers import get_provider, WIKIMEDIA, CARTODBPOSITRON, STAMEN_TERRAIN, STAMEN_TONER, ESRI_IMAGERY, OSM
         import holoviews as hv
-        import scipy
         import plotly.figure_factory as ff
         import plotly.express as px
 
@@ -1440,17 +1445,17 @@ if authentication_status:
 
 
 
-    # def time_series_plots():
-    #     import streamlit as st
-    #     st.markdown(f"# {list(page_names_to_funcs.keys())[4]}")
+    def time_series_plots():
+        import streamlit as st
+        st.markdown(f"# {list(page_names_to_funcs.keys())[4]}")
 
 
 
 
 
-    # def netCDF_convector():
-    #     import streamlit as st
-    #     st.markdown(f"# {list(page_names_to_funcs.keys())[5]}")
+    def netCDF_convector():
+        import streamlit as st
+        st.markdown(f"# {list(page_names_to_funcs.keys())[5]}")
         
     #     import streamlit as st
     #     import numpy as np
