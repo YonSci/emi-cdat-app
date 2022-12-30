@@ -1440,284 +1440,284 @@ if authentication_status:
 
 
 
-    def time_series_plots():
-        import streamlit as st
-        st.markdown(f"# {list(page_names_to_funcs.keys())[4]}")
+    # def time_series_plots():
+    #     import streamlit as st
+    #     st.markdown(f"# {list(page_names_to_funcs.keys())[4]}")
 
 
 
 
 
-    def netCDF_convector():
-        import streamlit as st
-        st.markdown(f"# {list(page_names_to_funcs.keys())[5]}")
+    # def netCDF_convector():
+    #     import streamlit as st
+    #     st.markdown(f"# {list(page_names_to_funcs.keys())[5]}")
         
-        import streamlit as st
-        import numpy as np
-        import pandas as pd
-        import openpyxl
-        import matplotlib.pyplot as plt
-        import scipy
-        from scipy.interpolate import interp2d, griddata
-        import numpy.ma as ma
-        from numpy.random import uniform, seed
-        import pykrige.kriging_tools as kt
-        from pykrige.ok import OrdinaryKriging
-        from pykrige.uk import UniversalKriging
-        import xarray as xr
-        import hvplot.xarray
-        import rioxarray
-        from datetime import datetime
+    #     import streamlit as st
+    #     import numpy as np
+    #     import pandas as pd
+    #     import openpyxl
+    #     import matplotlib.pyplot as plt
+    #     import scipy
+    #     from scipy.interpolate import interp2d, griddata
+    #     import numpy.ma as ma
+    #     from numpy.random import uniform, seed
+    #     import pykrige.kriging_tools as kt
+    #     from pykrige.ok import OrdinaryKriging
+    #     from pykrige.uk import UniversalKriging
+    #     import xarray as xr
+    #     import hvplot.xarray
+    #     import rioxarray
+    #     from datetime import datetime
         
-        import cartopy
-        import cartopy.crs as ccrs
-        import cartopy.feature as cfeature
-        from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
-        import cartopy.io.shapereader as shpreader
-        import cartopy.mpl.geoaxes
-        import cartopy.io.img_tiles as cimgt
-        from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-        from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter 
-        import salem
-        import time
-        import geoviews as gv
-        import geoviews.feature as gf
-        import holoviews as hv
-        from bokeh.plotting import figure, show
-        import plotly.figure_factory as ff
-        import plotly.express as px
+    #     import cartopy
+    #     import cartopy.crs as ccrs
+    #     import cartopy.feature as cfeature
+    #     from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
+    #     import cartopy.io.shapereader as shpreader
+    #     import cartopy.mpl.geoaxes
+    #     import cartopy.io.img_tiles as cimgt
+    #     from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+    #     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter 
+    #     import salem
+    #     import time
+    #     import geoviews as gv
+    #     import geoviews.feature as gf
+    #     import holoviews as hv
+    #     from bokeh.plotting import figure, show
+    #     import plotly.figure_factory as ff
+    #     import plotly.express as px
 
 
         
            
         
-        st.subheader('Geospatial Mapping')
+    #     st.subheader('Geospatial Mapping')
         
         
-        col1, col2, col3 = st.columns([4, 4, 4 ])
+    #     col1, col2, col3 = st.columns([4, 4, 4 ])
         
-        with col1:
-            kgdata = st.selectbox('Select Monthly/Seasonal/Annual Data',
-            ("Monthly Data", "Seasonal Data", "Annual Data"), key="kgdata")
-            st.write('You selected:', kgdata)
+    #     with col1:
+    #         kgdata = st.selectbox('Select Monthly/Seasonal/Annual Data',
+    #         ("Monthly Data", "Seasonal Data", "Annual Data"), key="kgdata")
+    #         st.write('You selected:', kgdata)
             
-            if kgdata == "Monthly Data":
-                uploaded_file = st.file_uploader("Please upload data in CSV or Excel file formats", type={"csv", "xlsx",  "xls"},  key="16")
-                if uploaded_file is not None:
-                    print(uploaded_file)
-                    print("Not correct file")
-                    try:
-                        month_kg = pd.read_csv(uploaded_file)
-                    except Exception as e:
-                        print(e)
-                        month_kg = pd.read_excel(uploaded_file)
+    #         if kgdata == "Monthly Data":
+    #             uploaded_file = st.file_uploader("Please upload data in CSV or Excel file formats", type={"csv", "xlsx",  "xls"},  key="16")
+    #             if uploaded_file is not None:
+    #                 print(uploaded_file)
+    #                 print("Not correct file")
+    #                 try:
+    #                     month_kg = pd.read_csv(uploaded_file)
+    #                 except Exception as e:
+    #                     print(e)
+    #                     month_kg = pd.read_excel(uploaded_file)
                 
-                    if  st.button("Load the data", key="month_kg"):
-                        month_kg
-                    st.success("Data Displayed!")
+    #                 if  st.button("Load the data", key="month_kg"):
+    #                     month_kg
+    #                 st.success("Data Displayed!")
                     
-            if "month_kg" not in st.session_state:
-                st.session_state.month_kg = "month_kg"
+    #         if "month_kg" not in st.session_state:
+    #             st.session_state.month_kg = "month_kg"
         
         
         
-        with col2:
-            Inter_method = st.selectbox("Select Interpolation Method",
-                                                ("Ordinary Kriging", "Universal Kriging"),  key="Inter_method")
-            st.write('You selected:', Inter_method)
+    #     with col2:
+    #         Inter_method = st.selectbox("Select Interpolation Method",
+    #                                             ("Ordinary Kriging", "Universal Kriging"),  key="Inter_method")
+    #         st.write('You selected:', Inter_method)
             
 
             
             
-        with col3:
-            variogram = st.selectbox("Select Variogram Models",
-                                     ("linear", "power", "spherical", "gaussian", "exponential", "hole-effect"),  key="variogram")
-            st.write('You selected:', variogram)
+    #     with col3:
+    #         variogram = st.selectbox("Select Variogram Models",
+    #                                  ("linear", "power", "spherical", "gaussian", "exponential", "hole-effect"),  key="variogram")
+    #         st.write('You selected:', variogram)
             
         
-        st.subheader('Step 1: Perform the spatial interpolation') 
+    #     st.subheader('Step 1: Perform the spatial interpolation') 
 
          
-        if Inter_method == "Ordinary Kriging":
+    #     if Inter_method == "Ordinary Kriging":
             
-            clicked = st.button("Perform Interpolation")
-            if clicked:                  
-                grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
-                grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
-                lon_x = month_kg['Lon']
-                lat_y = month_kg['Lat']
-                rf_value_mon = month_kg['Monthly Total Rainfall']
-                variogram = st.session_state['variogram']   
-                Ordinary_Kriging = OrdinaryKriging(lon_x, 
-                                        lat_y, 
-                                        rf_value_mon, 
-                                        variogram_model=variogram
-                                        )
-                OK_mon_rf, var_mon_rf = Ordinary_Kriging.execute('grid', grid_lon, grid_lat)
+    #         clicked = st.button("Perform Interpolation")
+    #         if clicked:                  
+    #             grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
+    #             grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
+    #             lon_x = month_kg['Lon']
+    #             lat_y = month_kg['Lat']
+    #             rf_value_mon = month_kg['Monthly Total Rainfall']
+    #             variogram = st.session_state['variogram']   
+    #             Ordinary_Kriging = OrdinaryKriging(lon_x, 
+    #                                     lat_y, 
+    #                                     rf_value_mon, 
+    #                                     variogram_model=variogram
+    #                                     )
+    #             OK_mon_rf, var_mon_rf = Ordinary_Kriging.execute('grid', grid_lon, grid_lat)
                     
             
-                if 'OK_mon_rf' not in st.session_state:
-                    st.session_state['OK_mon_rf'] = OK_mon_rf
+    #             if 'OK_mon_rf' not in st.session_state:
+    #                 st.session_state['OK_mon_rf'] = OK_mon_rf
             
-        else:
-            clicked = st.button("Perform Interpolation", key='interpol1')
-            if clicked:
-                grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
-                grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
-                lon_x = month_kg['Lon']
-                lat_y = month_kg['Lat']
-                rf_value_mon = month_kg['Monthly Total Rainfall']
-                Universal_Kriging = UniversalKriging(lon_x, 
-                                        lat_y, 
-                                        rf_value_mon, 
-                                        variogram_model=variogram,
-                                        drift_terms=['regional_linear']
-                                        )
-                UK_mon_rf, var_mon_rf = Universal_Kriging.execute('grid', grid_lon, grid_lat)
+    #     else:
+    #         clicked = st.button("Perform Interpolation", key='interpol1')
+    #         if clicked:
+    #             grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
+    #             grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
+    #             lon_x = month_kg['Lon']
+    #             lat_y = month_kg['Lat']
+    #             rf_value_mon = month_kg['Monthly Total Rainfall']
+    #             Universal_Kriging = UniversalKriging(lon_x, 
+    #                                     lat_y, 
+    #                                     rf_value_mon, 
+    #                                     variogram_model=variogram,
+    #                                     drift_terms=['regional_linear']
+    #                                     )
+    #             UK_mon_rf, var_mon_rf = Universal_Kriging.execute('grid', grid_lon, grid_lat)
                 
                 
-                if 'UK_mon_rf' not in st.session_state:
-                    st.session_state['UK_mon_rf'] = UK_mon_rf 
+    #             if 'UK_mon_rf' not in st.session_state:
+    #                 st.session_state['UK_mon_rf'] = UK_mon_rf 
       
    
-        st.subheader('Step 2: Display the spatial interpolation') 
-        if 'OK_mon_rf' not in st.session_state:
-            st.text('Please Load Rainfall Data 😔')
-        else:
-            clicked = st.button("View the interpolation output")   
-            OK_mon_rf = st.session_state['OK_mon_rf']
-            if clicked:   
-                plt.figure(figsize=(4, 3))
-                extent = [33, 48, 3, 15]
-                grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
-                grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
-                lon2d1, lat2d1 = np.meshgrid(grid_lon, grid_lat)
-                ax11 = plt.axes(projection=ccrs.PlateCarree())              
-                c1= ax11.pcolormesh(lon2d1, lat2d1, OK_mon_rf, transform=ccrs.PlateCarree(),  cmap='viridis')
-                ax11.coastlines()
-                ax11.add_feature(cartopy.feature.OCEAN, zorder=100, edgecolor='k')
-                ax11.add_feature(cartopy.feature.BORDERS, edgecolor='black')
-                cb = plt.colorbar(c1,orientation="vertical",extendrect='True', shrink=0.60)
-                cb.set_label("Rainfall [mm]", fontsize=6)
-                plt.title("Interpolatation Result of Monthly Rainfall \n using Ordinary Kriging Interpolation", fontsize=5)
-                st.pyplot(plt)            
+    #     st.subheader('Step 2: Display the spatial interpolation') 
+    #     if 'OK_mon_rf' not in st.session_state:
+    #         st.text('Please Load Rainfall Data 😔')
+    #     else:
+    #         clicked = st.button("View the interpolation output")   
+    #         OK_mon_rf = st.session_state['OK_mon_rf']
+    #         if clicked:   
+    #             plt.figure(figsize=(4, 3))
+    #             extent = [33, 48, 3, 15]
+    #             grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
+    #             grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
+    #             lon2d1, lat2d1 = np.meshgrid(grid_lon, grid_lat)
+    #             ax11 = plt.axes(projection=ccrs.PlateCarree())              
+    #             c1= ax11.pcolormesh(lon2d1, lat2d1, OK_mon_rf, transform=ccrs.PlateCarree(),  cmap='viridis')
+    #             ax11.coastlines()
+    #             ax11.add_feature(cartopy.feature.OCEAN, zorder=100, edgecolor='k')
+    #             ax11.add_feature(cartopy.feature.BORDERS, edgecolor='black')
+    #             cb = plt.colorbar(c1,orientation="vertical",extendrect='True', shrink=0.60)
+    #             cb.set_label("Rainfall [mm]", fontsize=6)
+    #             plt.title("Interpolatation Result of Monthly Rainfall \n using Ordinary Kriging Interpolation", fontsize=5)
+    #             st.pyplot(plt)            
 
             
-        st.subheader('Step 3: Convert the interpolated surface into netCDF') 
+    #     st.subheader('Step 3: Convert the interpolated surface into netCDF') 
             
-        clicked = st.button("Convert to netCDF", key="nc1")
-        if clicked:
-            grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
-            grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
-            mon_rf_data = OK_mon_rf.data
-            mon_rfDataset = xr.Dataset( data_vars= {'mon_rf_data':(('lat', 'lon'), mon_rf_data), },
-                                        coords={'lat':grid_lat, 'lon':grid_lon})
-            Dataset = mon_rfDataset.rename({'lat':'lat', 'lon':'lon'})
-            Dataset['mon_rf_data'].attrs = {'units':'mm', 'long_name':'Monthly Rainfall'}
-            Dataset.lat.attrs['units'] = 'degrees_north'
-            Dataset.lat.attrs['long_name'] = 'latitude'
-            Dataset.lat.attrs['axis'] = 'Y'
-            Dataset.lon.attrs['units'] = 'degrees_east'
-            Dataset.lon.attrs['long_name'] = 'longitude'
-            Dataset.lon.attrs['axis'] = 'X'
-            Dataset.attrs = {'creation_date':datetime.now(), 'author':'EMI', 'email':'address@email.com', 
-                            'title':'Rainfall Data', 'source':'EMI', 'conventions':'CF-1.6', 'platform':'observation', 'institution':'EMI'}
-            Mon_Rainfall_OK = Dataset.mon_rf_data
-            Mon_Rainfall_OK.to_netcdf('Mon_Rainfall_OK.nc')  
+    #     clicked = st.button("Convert to netCDF", key="nc1")
+    #     if clicked:
+    #         grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
+    #         grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
+    #         mon_rf_data = OK_mon_rf.data
+    #         mon_rfDataset = xr.Dataset( data_vars= {'mon_rf_data':(('lat', 'lon'), mon_rf_data), },
+    #                                     coords={'lat':grid_lat, 'lon':grid_lon})
+    #         Dataset = mon_rfDataset.rename({'lat':'lat', 'lon':'lon'})
+    #         Dataset['mon_rf_data'].attrs = {'units':'mm', 'long_name':'Monthly Rainfall'}
+    #         Dataset.lat.attrs['units'] = 'degrees_north'
+    #         Dataset.lat.attrs['long_name'] = 'latitude'
+    #         Dataset.lat.attrs['axis'] = 'Y'
+    #         Dataset.lon.attrs['units'] = 'degrees_east'
+    #         Dataset.lon.attrs['long_name'] = 'longitude'
+    #         Dataset.lon.attrs['axis'] = 'X'
+    #         Dataset.attrs = {'creation_date':datetime.now(), 'author':'EMI', 'email':'address@email.com', 
+    #                         'title':'Rainfall Data', 'source':'EMI', 'conventions':'CF-1.6', 'platform':'observation', 'institution':'EMI'}
+    #         Mon_Rainfall_OK = Dataset.mon_rf_data
+    #         Mon_Rainfall_OK.to_netcdf('Mon_Rainfall_OK.nc')  
             
-            if 'Mon_Rainfall_OK' not in st.session_state:
-                st.session_state['Mon_Rainfall_OK'] = Mon_Rainfall_OK    
+    #         if 'Mon_Rainfall_OK' not in st.session_state:
+    #             st.session_state['Mon_Rainfall_OK'] = Mon_Rainfall_OK    
             
-            with open("Mon_Rainfall_OK.nc", "rb") as fp:
-                btn = st.download_button(
-                label="Download netCDF file",
-                data=fp,
-                file_name="Mon_Rainfall_OK.nc",
-            ) 
+    #         with open("Mon_Rainfall_OK.nc", "rb") as fp:
+    #             btn = st.download_button(
+    #             label="Download netCDF file",
+    #             data=fp,
+    #             file_name="Mon_Rainfall_OK.nc",
+    #         ) 
                 
 
                 
                 
-        st.subheader('Step 4: Subset the interpolated surface into Ethiopian domain')  
-        a = 200
-        b = 33
-        if b > a:
-            print("b is greater than a")
-        elif a == b:
-            print("a and b are equal")
-        else:
-            if 'Mon_Rainfall_OK' not in st.session_state:
-                st.text('Please Load Rainfall Data 😔')
-            else:        
-                clicked = st.button("Extract to the Ethiopian Domain")
-                if clicked:
-                    Mon_Rainfall_OK = st.session_state['Mon_Rainfall_OK']
-                    Mon_Rainfall_OK_pro = Mon_Rainfall_OK.rio.write_crs("EPSG:4326", inplace=True)
-                    shdf_wo = salem.read_shapefile(salem.get_demo_file('world_borders.shp'))
-                    shdf_et = shdf_wo.loc[shdf_wo['CNTRY_NAME'] == 'Ethiopia'] 
-                    Mon_Rainfall_OK_pro_et = Mon_Rainfall_OK_pro.salem.roi(shape=shdf_et)
+    #     st.subheader('Step 4: Subset the interpolated surface into Ethiopian domain')  
+    #     a = 200
+    #     b = 33
+    #     if b > a:
+    #         print("b is greater than a")
+    #     elif a == b:
+    #         print("a and b are equal")
+    #     else:
+    #         if 'Mon_Rainfall_OK' not in st.session_state:
+    #             st.text('Please Load Rainfall Data 😔')
+    #         else:        
+    #             clicked = st.button("Extract to the Ethiopian Domain")
+    #             if clicked:
+    #                 Mon_Rainfall_OK = st.session_state['Mon_Rainfall_OK']
+    #                 Mon_Rainfall_OK_pro = Mon_Rainfall_OK.rio.write_crs("EPSG:4326", inplace=True)
+    #                 shdf_wo = salem.read_shapefile(salem.get_demo_file('world_borders.shp'))
+    #                 shdf_et = shdf_wo.loc[shdf_wo['CNTRY_NAME'] == 'Ethiopia'] 
+    #                 Mon_Rainfall_OK_pro_et = Mon_Rainfall_OK_pro.salem.roi(shape=shdf_et)
                     
-                    if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
-                        st.session_state['Mon_Rainfall_OK_pro_et'] = Mon_Rainfall_OK_pro_et   
+    #                 if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
+    #                     st.session_state['Mon_Rainfall_OK_pro_et'] = Mon_Rainfall_OK_pro_et   
                     
-            st.subheader('Step 5: Display the result within Ethiopian domain') 
-            if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
-                st.text('Please Load Rainfall Data 😔')
-            else:    
-                clicked = st.button("Display the result")
-                if clicked:
-                    Mon_Rainfall_OK_pro_et = st.session_state['Mon_Rainfall_OK_pro_et']
-        # if clicked:
-        #     Mon_Rainfall_OK_pro_et.hvplot.quadmesh(
-        #     'lon', 'lat', crs=ccrs.PlateCarree(),
-        #     projection=ccrs.PlateCarree(),
-        #     clim = (0, 400),
-        #     ylim=(3, 15), 
-        #     xlim = (33, 48),
-        #     features = {'borders': '10m'},
-        #     cmap='viridis',
-        #     clabel = 'rainfall (mm)',
-        #     project=True, 
-        #     geo=True,
-        #     rasterize=True, 
-        #     coastline=True, 
-        #     grid=True, 
-        #     frame_width=500, 
-        #     dynamic=False,  
-        #     tiles='OSM').opts(title='first image') 
+    #         st.subheader('Step 5: Display the result within Ethiopian domain') 
+    #         if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
+    #             st.text('Please Load Rainfall Data 😔')
+    #         else:    
+    #             clicked = st.button("Display the result")
+    #             if clicked:
+    #                 Mon_Rainfall_OK_pro_et = st.session_state['Mon_Rainfall_OK_pro_et']
+    #     # if clicked:
+    #     #     Mon_Rainfall_OK_pro_et.hvplot.quadmesh(
+    #     #     'lon', 'lat', crs=ccrs.PlateCarree(),
+    #     #     projection=ccrs.PlateCarree(),
+    #     #     clim = (0, 400),
+    #     #     ylim=(3, 15), 
+    #     #     xlim = (33, 48),
+    #     #     features = {'borders': '10m'},
+    #     #     cmap='viridis',
+    #     #     clabel = 'rainfall (mm)',
+    #     #     project=True, 
+    #     #     geo=True,
+    #     #     rasterize=True, 
+    #     #     coastline=True, 
+    #     #     grid=True, 
+    #     #     frame_width=500, 
+    #     #     dynamic=False,  
+    #     #     tiles='OSM').opts(title='first image') 
         
         
             
-                    plt.figure(figsize=(4, 3))
-                    extent = [33, 48, 3, 15]
-                    grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
-                    grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
-                    lon2d1, lat2d1 = np.meshgrid(grid_lon, grid_lat)
-                    ax11 = plt.axes(projection=ccrs.PlateCarree())
-                    c1= ax11.pcolormesh(lon2d1, lat2d1, Mon_Rainfall_OK_pro_et , transform=ccrs.PlateCarree(),  cmap='viridis_r')
-                    ax11.coastlines()
-                    ax11.add_feature(cartopy.feature.OCEAN, zorder=100, edgecolor='k')
-                    ax11.add_feature(cartopy.feature.BORDERS, edgecolor='black')
-                    cb = plt.colorbar(c1,orientation="vertical",extendrect='True', shrink=0.60)
-                    cb.set_label("Rainfall [mm]", fontsize=6)
-                    plt.title("Interpolatation Result of Monthly Rainfall \n using Ordinary Kriging Interpolation", fontsize=5)
-                    st.pyplot(plt)
+    #                 plt.figure(figsize=(4, 3))
+    #                 extent = [33, 48, 3, 15]
+    #                 grid_lon = np.arange(33, 48.1, 0.1, dtype='float64')
+    #                 grid_lat = np.arange(3, 15.1, 0.1, dtype='float64')
+    #                 lon2d1, lat2d1 = np.meshgrid(grid_lon, grid_lat)
+    #                 ax11 = plt.axes(projection=ccrs.PlateCarree())
+    #                 c1= ax11.pcolormesh(lon2d1, lat2d1, Mon_Rainfall_OK_pro_et , transform=ccrs.PlateCarree(),  cmap='viridis_r')
+    #                 ax11.coastlines()
+    #                 ax11.add_feature(cartopy.feature.OCEAN, zorder=100, edgecolor='k')
+    #                 ax11.add_feature(cartopy.feature.BORDERS, edgecolor='black')
+    #                 cb = plt.colorbar(c1,orientation="vertical",extendrect='True', shrink=0.60)
+    #                 cb.set_label("Rainfall [mm]", fontsize=6)
+    #                 plt.title("Interpolatation Result of Monthly Rainfall \n using Ordinary Kriging Interpolation", fontsize=5)
+    #                 st.pyplot(plt)
         
         
-        Mon_Rainfall_OK_pro_et = st.session_state['Mon_Rainfall_OK_pro_et']
-        st.subheader('Step 6: Convert the final result into netCDF file and Download') 
-        if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
-            st.text('Please Load Rainfall Data 😔')
-        else:        
-            clicked = st.button("Convert to netCDF", key="nc2")
-            if clicked:
-                Mon_Rainfall_OK_pro_et.to_netcdf('Mon_Rainfall_OK_pro_et.nc')  
-                with open("Mon_Rainfall_OK.nc", "rb") as fp:
-                    btn = st.download_button(
-                    label="Download netCDF file",
-                    data=fp,
-                    file_name="Mon_Rainfall_OK_ET.nc",
-                    ) 
+    #     Mon_Rainfall_OK_pro_et = st.session_state['Mon_Rainfall_OK_pro_et']
+    #     st.subheader('Step 6: Convert the final result into netCDF file and Download') 
+    #     if 'Mon_Rainfall_OK_pro_et' not in st.session_state:
+    #         st.text('Please Load Rainfall Data 😔')
+    #     else:        
+    #         clicked = st.button("Convert to netCDF", key="nc2")
+    #         if clicked:
+    #             Mon_Rainfall_OK_pro_et.to_netcdf('Mon_Rainfall_OK_pro_et.nc')  
+    #             with open("Mon_Rainfall_OK.nc", "rb") as fp:
+    #                 btn = st.download_button(
+    #                 label="Download netCDF file",
+    #                 data=fp,
+    #                 file_name="Mon_Rainfall_OK_ET.nc",
+    #                 ) 
                 
         
       
